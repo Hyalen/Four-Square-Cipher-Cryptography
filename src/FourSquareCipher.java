@@ -1,70 +1,90 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Collections;
+import java.util.Random;
 
 public class FourSquareCipher {
-	//10x10 matrix that will store four 5x5 matrices (quadrants)
-	private char[][] matrix;
-	
-	//The unordered ArrayList will populate both the upper-right and bottom-left matrices
-	private static ArrayList<Character> randomChar;
+	/**
+	 * four squares that will be disposed with the following pattern:
+	 * --
+	 * square1 - upper-left and square4 - bottom-right = stores the alphabet, excluding
+	 * the letter J (that was chosen randomly), dropping any duplicate letters
+	 * --
+	 * square2 - upper-right and square3 - bottom-left = stores the keywords, following
+	 * the same rules as the above, but stored in random positions
+	 */
+	private char[][] square1;
+	private char[][] square2;
+	private char[][] square3;
+	private char[][] square4;
 
-	//The ordered ArrayList will populate both the upper-left and bottom-right matrices
-	private static ArrayList<Character> orderedChar;
+	//The unordered ArrayLists will populate both the upper-right and bottom-left squares
+	private static ArrayList<Character> randomChar1;
+	private static ArrayList<Character> randomChar2;
 
 	/**
 	 * 
 	 */
 	public FourSquareCipher() {
-		matrix = new char[10][10];
-		randomChar = new ArrayList<>();
-		orderedChar = new ArrayList<>();
-		createArrayLists();
-		populateMatrix();
+		square1 = new char[5][5];
+		square2 = new char[5][5];
+		square3 = new char[5][5];
+		square4 = new char[5][5];
+		randomChar1 = new ArrayList<Character>();
+		randomChar2 = new ArrayList<Character>();
+
+		createArrayList();
+		createNormalSquare();
+		createKeywordSquare();
 	}
 
 	/**
 	 * 
 	 */
-	public static void createArrayLists() {
+	public static void createArrayList() {
 		for (int i = 0; i <= 25; i++) {
-			//I randomly chose to put the letter J away
+			//if not equal to the letter J
 			if(i != 9) {
 				char c = (char) (i + 'A');
-				randomChar.add(c);
-				orderedChar.add(c);
+				randomChar1.add(c);
+				randomChar2.add(c);
 			}
 		}
+
+		Collections.shuffle(randomChar1);
+		Collections.shuffle(randomChar2);
 	}
 	
 	/**
 	 * 
 	 */
-	public void populateMatrix() {
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				if(i == 0 && j == 5) {
-					Collections.shuffle(randomChar);
-				}
+	public void createNormalSquare() {
+		int count = 0;
 
-				if(i == 5 && j == 0) {
-					Collections.shuffle(randomChar);
-				}
-
-				if(i >= 0 && i <= 4 && j <= 4) {
-					matrix[i][j] = orderedChar.remove();
-				} 
-				
-				else if(i >= 5 && j <= 9 && j >= 5) {
-					//do something else
-				}
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if(count == 9) count++;
+				square1[i][j] = (char)('A' + count);
+				square4[i][j] = (char)('A' + count);
+				count++;
 			}
 		}
+	}
 
-		for (int i = 0; i < 10; i++) {
-			System.out.println("");
-			for (int j = 0; j < 10; j++) {
-				System.out.print(matrix[i][j] + " ");
+	public void createKeywordSquare() {
+		int count1 = 0;
+		int count2 = 0;
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				square2[i][j] = randomChar1.get(count1);
+				count1++;
+			}
+		}
+		
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				square3[i][j] = randomChar2.get(count2);
+				count2++;
 			}
 		}
 	}
