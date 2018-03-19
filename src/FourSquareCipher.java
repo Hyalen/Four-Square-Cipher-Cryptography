@@ -42,12 +42,10 @@ public class FourSquareCipher {
 	 */
 	public static void createArrayList() {
 		for (int i = 0; i <= 25; i++) {
-			//if not equal to the letter J
-			if(i != 9) {
-				char c = (char) (i + 'A');
-				randomChar1.add(c);
-				randomChar2.add(c);
-			}
+			if (i == 9) i++;
+			char c = (char) (i + 'A');
+			randomChar1.add(c);
+			randomChar2.add(c);
 		}
 
 		Collections.shuffle(randomChar1);
@@ -67,7 +65,7 @@ public class FourSquareCipher {
 				square4[i][j] = (char)('A' + count);
 				count++;
 			}
-		}
+		}	
 	}
 
 	public void createKeywordSquare() {
@@ -85,6 +83,15 @@ public class FourSquareCipher {
 			for (int j = 0; j < 5; j++) {
 				square3[i][j] = randomChar2.get(count2);
 				count2++;
+			}
+		}
+
+
+
+		for (int i = 0; i < 5; i++) {
+			System.out.println("");
+			for (int j = 0; j < 5; j++) {
+				System.out.print(square3[i][j]);
 			}
 		}
 	}
