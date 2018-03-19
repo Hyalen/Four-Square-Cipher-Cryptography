@@ -85,18 +85,45 @@ public class FourSquareCipher {
 				count2++;
 			}
 		}
+	}
 
+	public String trimString(String key) {
+		String trimmed = "";
 
-
-		for (int i = 0; i < 5; i++) {
-			System.out.println("");
-			for (int j = 0; j < 5; j++) {
-				System.out.print(square3[i][j]);
-			}
+		for (int i = 0; i < key.length(); i++) {
+			if(key.charAt(i) != ' ')
+				trimmed += key.charAt(i);
 		}
+
+		return trimmed;
+	}
+
+	public String convertToBigram(String key) {
+		String bigram = trimString(key);
+		/* 
+		for (int i = 0; i < word.length(); i++) {
+
+		} */
+		return bigram;
+	}
+
+	/**
+	 * 
+	 */
+	public void Encrypt() {
+		
+	}
+
+	/**
+	 * 
+	 */
+	public void Decrypt() {
+
 	}
 
 	public static void main(String[] args) {
 		FourSquareCipher f = new FourSquareCipher();
+		String word = "a a a a a a a           x e r e ca asdkjlhasil s s                      .";
+		System.out.println(f.convertToBigram(word));
 	}
 }
