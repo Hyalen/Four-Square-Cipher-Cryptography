@@ -106,13 +106,11 @@ public class FourSquareCipher {
 	 */
 	public String toUpperCase(String key) {
 		String upperCase = "";
-		System.out.println("Passou por aqui1: " + key);
 		final int conversion = 32;
 
 		for (int i = 0; i < key.length(); i++) {
 			if(key.charAt(i) >= 97 && key.charAt(i) <= 122) {
 				upperCase += (char)(key.charAt(i) - conversion);
-				System.out.println("Passou por aqui2: " + upperCase);
 			} else {
 				upperCase += key.charAt(i);
 			}
@@ -153,31 +151,37 @@ public class FourSquareCipher {
 	/**
 	 * 
 	 */
-	public String convertToDigraph(String key) {
+	public String convertToBigram(String key) {
 		//trim the String first
 		String trimmed = trimString(key);
 
 		//then, convert it to upperCase letters
 		String newKey = toUpperCase(trimmed);
 
-		/* String [] digraph = new String[1000];
-		
+		int size = newKey.length();
+
+		//ArrayList<String> bigram = new ArrayList();
+		String []bigram = new String[20]; 
+
+		//if the number of characters in the String is an odd number, then
+		//the bigram wont work properly. For that, it must be added the next
+		//letter from the alphabet, according to the last character of the String
+		boolean verify = hasOddNumberOfChars(newKey);
+		String c = catchSubstring(newKey, size-1, size);
+
+		if (verify && c.charAt(0) != 'Z') {
+			newKey += (char)(c.charAt(0) + 1); 
+		} else if (verify && c.charAt(0) == 'Z') {
+			newKey += 'A';
+		}
+
 		int count = 0;
 
-		for (int i = 0; i < digraph.length(); i++) {
-			count++;
-			if (i % 2 == 0 && i+2 != digraph.length()) {
-				digraph[count] += catchSubstring(key, i, i+2);
-			}
+		for (int i = 0; i < newKey.length() / 2; i++) {
+			bigram[i] = catchSubstring(newKey, count, count+2);
+			count += 2;
 		}
 
-		//if the number of characters in the String is an odd number,
-		//then the Digraph wont work properly. For that, it must be added
-		//the following letter from the last character
-		if (verify && i == word.length()-1) {
-			digraph += (char)(key.charAt(i) + 1);
-		}
- */
 		return newKey;
 	}
 
@@ -197,6 +201,5 @@ public class FourSquareCipher {
 
 	public static void main(String[] args) {
 		FourSquareCipher f = new FourSquareCipher();
-		System.out.println(f.catchSubstring("Hyalen", 0, 4));
 	}
 }
