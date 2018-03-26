@@ -5,32 +5,42 @@ import java.util.Random;
 public class FourSquareCipher {
 	/**
 	 * four squares that will be disposed with the following pattern:
-	 * --
-	 * square1 - upper-left and square4 - bottom-right = stores the alphabet, excluding
-	 * the letter J (that was chosen randomly), dropping any duplicate letters
-	 * --
-	 * square2 - upper-right and square3 - bottom-left = stores the keywords, following
-	 * the same rules as the above, but stored in random positions
+	 * -----
+	 * squareAlphabet will represent both upper-left and bottom-right squares. It will store the alphabet,
+	 * excluding the letter J (that was chosen randomly), dropping any duplicate letters
+	 * -----
+	 * squareKeyword1 will represent the upper-right square and squareKeyword2 the bottom-left. They will
+	 * store the keywords, following the same rules as the above, but stored in random positions
 	 */
-	private char[][] square1;
-	private char[][] square2;
-	private char[][] square3;
-	private char[][] square4;
+	private char[][] squareAlphabet;
+	private char[][] squareKeyword1;
+	private char[][] squareKeyword2;
 
 	//The unordered ArrayLists will populate both the upper-right and bottom-left squares
 	private static ArrayList<Character> randomChar1;
 	private static ArrayList<Character> randomChar2;
 
+	//variables
+	private String trimmed;
+	private String newKey;
+	private String[] encryptedMsg;
+	private String[] bigram;
+	private int sizeBigram;
+
 	/**
 	 * 
 	 */
 	public FourSquareCipher() {
-		square1 = new char[5][5];
-		square2 = new char[5][5];
-		square3 = new char[5][5];
-		square4 = new char[5][5];
+		squareAlphabet = new char[5][5];
+		squareKeyword1 = new char[5][5];
+		squareKeyword2 = new char[5][5];
+
 		randomChar1 = new ArrayList<Character>();
 		randomChar2 = new ArrayList<Character>();
+
+		trimmed = "";
+		newKey = "";
+		sizeBigram = 0;
 
 		createArrayList();
 		createNormalSquare();
@@ -61,8 +71,7 @@ public class FourSquareCipher {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				if(count == 9) count++;
-				square1[i][j] = (char)('A' + count);
-				square4[i][j] = (char)('A' + count);
+				squareAlphabet[i][j] = (char)('A' + count);
 				count++;
 			}
 		}	
@@ -74,14 +83,14 @@ public class FourSquareCipher {
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				square2[i][j] = randomChar1.get(count1);
+				squareKeyword1[i][j] = randomChar1.get(count1);
 				count1++;
 			}
 		}
 		
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				square3[i][j] = randomChar2.get(count2);
+				squareKeyword2[i][j] = randomChar2.get(count2);
 				count2++;
 			}
 		}
@@ -126,9 +135,7 @@ public class FourSquareCipher {
 		boolean verify = true;
 		int size = 0;
 
-		for (int i = 0; i < key.length(); i++) {
-			size++;
-		}
+		for (int i = 0; i < key.length(); i++) size++;
 
 		if (size % 2 == 0) verify = false;
 
@@ -141,9 +148,7 @@ public class FourSquareCipher {
 	public String catchSubstring(String word, int begin, int end) {
 		String substring = "";
 
-		for (int i = begin; i < end; i++) {
-			substring += word.charAt(i);
-		}
+		for (int i = begin; i < end; i++) substring += word.charAt(i);
 
 		return substring;
 	}
@@ -151,23 +156,22 @@ public class FourSquareCipher {
 	/**
 	 * 
 	 */
-	public String convertToBigram(String key) {
+	public void convertToBigram(String key) {
 		//trim the String first
-		String trimmed = trimString(key);
+		trimmed = trimString(key);
 
 		//then, convert it to upperCase letters
-		String newKey = toUpperCase(trimmed);
+		newKey = toUpperCase(trimmed);
 
-		int size = newKey.length();
+		sizeBigram = newKey.length()/2;
 
-		//ArrayList<String> bigram = new ArrayList();
-		String []bigram = new String[20]; 
+		bigram = new String[sizeBigram]; 
 
-		//if the number of characters in the String is an odd number, then
+		//if the number of characters inside the String is an odd number, then
 		//the bigram wont work properly. For that, it must be added the next
 		//letter from the alphabet, according to the last character of the String
 		boolean verify = hasOddNumberOfChars(newKey);
-		String c = catchSubstring(newKey, size-1, size);
+		String c = catchSubstring(newKey, newKey.length()-1, newKey.length());
 
 		if (verify && c.charAt(0) != 'Z') {
 			newKey += (char)(c.charAt(0) + 1); 
@@ -177,18 +181,44 @@ public class FourSquareCipher {
 
 		int count = 0;
 
-		for (int i = 0; i < newKey.length() / 2; i++) {
-			bigram[i] = catchSubstring(newKey, count, count+2);
+		for (int i = 0; i < bigram.length; i++) {
+			bigram[i] = catchSubstring(newKey,  count, count+2);
 			count += 2;
 		}
 
-		return newKey;
+		for (int i = 0; i < bigram.length; i++) {
+			System.out.println(bigram[i]);
+		}
 	}
 
 	/**
 	 * 
 	 */
 	public void Encrypt() {
+		int colTopLeft = 0, colBotRight = 0, lineTopLeft = 0, lineBotRight = 0;
+		char first, second;
+		encryptedMsg = new String[sizeBigram];
+
+		for(int i = 0; i < bigram.length; i++) {
+			first = bigram[i].charAt(0);
+			second = bigram[i].charAt(1);
+			for(int m = 0; m < 5; m++) {
+				for(int n = 0; n < 5; n++) {
+					if(squareKeyword1[m][n] == first) {
+						lineTopLeft = m;
+						colTopLeft = n;
+					} else if(squareKeyword2[m][n] == second) {
+						lineBotRight = m;
+						colBotRight = n;
+					}
+				}
+			}
+			encryptedMsg[i] = "" + squareKeyword1[lineTopLeft][colBotRight] + squareKeyword2[lineBotRight][colTopLeft];
+		}
+
+		for (int i = 0; i < encryptedMsg.length; i++) {
+			System.out.println(encryptedMsg[i]);
+		}
 		
 	}
 
@@ -201,5 +231,7 @@ public class FourSquareCipher {
 
 	public static void main(String[] args) {
 		FourSquareCipher f = new FourSquareCipher();
+		f.convertToBigram("Que Que isso aqui meu joVe        m");
+		f.Encrypt();
 	}
 }
