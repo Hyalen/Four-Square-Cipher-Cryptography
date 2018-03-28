@@ -275,7 +275,7 @@ public class FourSquareCipher {
 
 	public static void main(String[] args) {
 		FourSquareCipher f = new FourSquareCipher();
-		f.convertToBigram("Que Que isso aqui meu joVe        m");
+		f.convertToBigram("Hello World");
 		f.Encrypt();
 		f.print();
 	}
