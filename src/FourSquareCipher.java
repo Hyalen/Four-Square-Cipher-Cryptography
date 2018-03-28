@@ -111,7 +111,7 @@ public class FourSquareCipher {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public String toUpperCase(String key) {
 		String upperCase = "";
@@ -204,10 +204,12 @@ public class FourSquareCipher {
 			second = bigram[i].charAt(1);
 			for(int m = 0; m < 5; m++) {
 				for(int n = 0; n < 5; n++) {
-					if(squareKeyword1[m][n] == first) {
+					if(squareAlphabet[m][n] == first) {
+						//System.out.println(m + "" + n);
 						lineTopLeft = m;
 						colTopLeft = n;
-					} else if(squareKeyword2[m][n] == second) {
+					} else if(squareAlphabet[m][n] == second) {
+						//System.out.println(m + "" + n);
 						lineBotRight = m;
 						colBotRight = n;
 					}
@@ -215,11 +217,53 @@ public class FourSquareCipher {
 			}
 			encryptedMsg[i] = "" + squareKeyword1[lineTopLeft][colBotRight] + squareKeyword2[lineBotRight][colTopLeft];
 		}
+	}
 
-		for (int i = 0; i < encryptedMsg.length; i++) {
-			System.out.println(encryptedMsg[i]);
+	public void print() {
+		System.out.println("Alphabet Square");
+		//print the alphabet square
+		for (int i = 0; i < 5; i++) {
+			System.out.println("");
+			for (int j = 0; j < 5; j++) {
+				System.out.print(squareAlphabet[i][j] + " ");
+			}
 		}
-		
+
+		System.out.println("");
+		System.out.println("Keyword Square 1");
+		//prints the keyword square 1
+		for (int i = 0; i < 5; i++) {
+			System.out.println("");
+			for (int j = 0; j < 5; j++) {
+				System.out.print(squareKeyword1[i][j] + " ");
+			}
+		}
+
+		System.out.println("");
+		System.out.println("Keyword Square 2");
+		//prints the keyword square 2
+		for (int i = 0; i < 5; i++) {
+			System.out.println("");
+			for (int j = 0; j < 5; j++) {
+				System.out.print(squareKeyword2[i][j] + " ");
+			}
+		}
+
+		System.out.println("");
+		System.out.println("Bigram to be encrypted: ");
+		//prints the bigram
+		for (int i = 0; i < encryptedMsg.length; i++) {
+			System.out.print(bigram[i]);
+		}
+
+		System.out.println("");
+		System.out.println("Encrypted message: ");
+		//prints the encrypted message
+		for (int i = 0; i < encryptedMsg.length; i++) {
+			System.out.print(encryptedMsg[i]);
+		}
+
+		System.out.println("");
 	}
 
 	/**
@@ -233,5 +277,6 @@ public class FourSquareCipher {
 		FourSquareCipher f = new FourSquareCipher();
 		f.convertToBigram("Que Que isso aqui meu joVe        m");
 		f.Encrypt();
+		f.print();
 	}
 }
