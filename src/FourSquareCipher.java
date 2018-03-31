@@ -23,8 +23,9 @@ public class FourSquareCipher {
 	//variables
 	private String trimmed;
 	private String newKey;
-	private String[] encryptedMsg;
 	private String[] bigram;
+	private String[] encryptedMsg;
+	private String[] decryptedMsg;
 	private int sizeBigram;
 
 	/**
@@ -162,17 +163,18 @@ public class FourSquareCipher {
 
 		//then, convert it to upperCase letters
 		newKey = toUpperCase(trimmed);
+		boolean verify = hasOddNumberOfChars(newKey);
 
-		sizeBigram = newKey.length()/2;
+		if(verify) sizeBigram = (newKey.length() / 2) + 1;
+		else sizeBigram = newKey.length() / 2;
 
 		bigram = new String[sizeBigram]; 
+
+		String c = catchSubstring(newKey, newKey.length()-1, newKey.length());
 
 		//if the number of characters inside the String is an odd number, then
 		//the bigram wont work properly. For that, it must be added the next
 		//letter from the alphabet, according to the last character of the String
-		boolean verify = hasOddNumberOfChars(newKey);
-		String c = catchSubstring(newKey, newKey.length()-1, newKey.length());
-
 		if (verify && c.charAt(0) != 'Z') {
 			newKey += (char)(c.charAt(0) + 1); 
 		} else if (verify && c.charAt(0) == 'Z') {
@@ -186,9 +188,9 @@ public class FourSquareCipher {
 			count += 2;
 		}
 
-		for (int i = 0; i < bigram.length; i++) {
+/* 		for (int i = 0; i < bigram.length; i++) {
 			System.out.println(bigram[i]);
-		}
+		} */
 	}
 
 	/**
@@ -205,17 +207,46 @@ public class FourSquareCipher {
 			for(int m = 0; m < 5; m++) {
 				for(int n = 0; n < 5; n++) {
 					if(squareAlphabet[m][n] == first) {
-						//System.out.println(m + "" + n);
+						System.out.println(m + "" + n);
 						lineTopLeft = m;
 						colTopLeft = n;
 					} else if(squareAlphabet[m][n] == second) {
-						//System.out.println(m + "" + n);
+						System.out.println(m + "" + n);
 						lineBotRight = m;
 						colBotRight = n;
 					}
 				}
 			}
 			encryptedMsg[i] = "" + squareKeyword1[lineTopLeft][colBotRight] + squareKeyword2[lineBotRight][colTopLeft];
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void Decrypt() {
+		int colTopRight = 0, colBotLeft = 0, lineTopRight = 0, lineBotLeft = 0;
+		char first, second;
+		decryptedMsg = new String[sizeBigram];
+
+		for(int i = 0; i < encryptedMsg.length; i++) {
+			first = encryptedMsg[i].charAt(0);
+			second = encryptedMsg[i].charAt(1);
+			System.out.println(first + " " + second);
+			for(int m = 0; m < 5; m++) {
+				for(int n = 0; n < 5; n++) {
+					if(squareKeyword1[m][n] == first) {
+						System.out.println("1 - " + m + "" + n);
+						lineTopRight = m;
+						colTopRight = n;
+					} else if(squareKeyword2[m][n] == second) {
+						System.out.println("2 - " + m + "" + n);
+						lineBotLeft = m;
+						colBotLeft = n;
+					}
+				}
+			}
+			decryptedMsg[i] = "" + squareAlphabet[lineTopRight][colBotLeft] + squareAlphabet[lineBotLeft][colTopRight];
 		}
 	}
 
@@ -264,19 +295,20 @@ public class FourSquareCipher {
 		}
 
 		System.out.println("");
-	}
+		System.out.println("Decrypted message: ");
+		//prints the decrypted message
+		for (int i = 0; i < decryptedMsg.length; i++) {
+			System.out.print(decryptedMsg[i]);
+		}
 
-	/**
-	 * 
-	 */
-	public void Decrypt() {
-
+		System.out.println("");
 	}
 
 	public static void main(String[] args) {
 		FourSquareCipher f = new FourSquareCipher();
-		f.convertToBigram("Hello World");
+		f.convertToBigram("All inn");
 		f.Encrypt();
+		f.Decrypt();
 		f.print();
 	}
 }
