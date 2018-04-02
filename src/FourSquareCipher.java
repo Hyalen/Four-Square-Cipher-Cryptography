@@ -206,12 +206,19 @@ public class FourSquareCipher {
 			second = bigram[i].charAt(1);
 			for(int m = 0; m < 5; m++) {
 				for(int n = 0; n < 5; n++) {
-					if(squareAlphabet[m][n] == first) {
-						System.out.println(m + "" + n);
+					//if both chars are equal, the second will be at none of the if statements
+					if(squareAlphabet[m][n] == first && squareAlphabet[m][n] == second) {
+						System.out.println("Passou no primeiro hehehe");
+						lineTopLeft = m;
+						colTopLeft = n;
+						lineBotRight = m;
+						colBotRight = n;
+					} else if(squareAlphabet[m][n] == first) {
+						System.out.println("Passou no segundo hehehe");
 						lineTopLeft = m;
 						colTopLeft = n;
 					} else if(squareAlphabet[m][n] == second) {
-						System.out.println(m + "" + n);
+						System.out.println("Passou no terceiro hehehe");
 						lineBotRight = m;
 						colBotRight = n;
 					}
@@ -235,12 +242,17 @@ public class FourSquareCipher {
 			System.out.println(first + " " + second);
 			for(int m = 0; m < 5; m++) {
 				for(int n = 0; n < 5; n++) {
-					if(squareKeyword1[m][n] == first) {
-						System.out.println("1 - " + m + "" + n);
+					if(squareKeyword1[m][n] == first && squareKeyword2[m][n] == second) {
+						//System.out.println("1 - " + m + "" + n);
+						lineTopRight = m;
+						colTopRight = n;
+						lineBotLeft = m;
+						colBotLeft = n;
+					} else if(squareKeyword1[m][n] == first) {
 						lineTopRight = m;
 						colTopRight = n;
 					} else if(squareKeyword2[m][n] == second) {
-						System.out.println("2 - " + m + "" + n);
+						//System.out.println("2 - " + m + "" + n);
 						lineBotLeft = m;
 						colBotLeft = n;
 					}
@@ -306,7 +318,7 @@ public class FourSquareCipher {
 
 	public static void main(String[] args) {
 		FourSquareCipher f = new FourSquareCipher();
-		f.convertToBigram("All inn");
+		f.convertToBigram("Hello World");
 		f.Encrypt();
 		f.Decrypt();
 		f.print();
