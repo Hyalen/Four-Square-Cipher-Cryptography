@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class FourSquareCipher {
+class FourSquareCipher {
 	/**
 	 * four squares that will be disposed with the following pattern:
 	 * -----
@@ -24,8 +24,10 @@ public class FourSquareCipher {
 	private String trimmed;
 	private String newKey;
 	private String[] bigram;
-	private String[] encryptedMsg;
-	private String[] decryptedMsg;
+	public String[] encryptedMsg;
+	public String encryptedMsgString;
+	public String[] decryptedMsg;
+	public String decryptedMsgString;
 	private int sizeBigram;
 
 	/**
@@ -41,6 +43,8 @@ public class FourSquareCipher {
 
 		trimmed = "";
 		newKey = "";
+		encryptedMsgString = "";
+		decryptedMsgString = "";
 		sizeBigram = 0;
 
 		createArrayList();
@@ -104,7 +108,7 @@ public class FourSquareCipher {
 		String trimmed = "";
 
 		for (int i = 0; i < key.length(); i++) {
-			if(key.charAt(i) != ' ')
+			if((key.charAt(i) >= 65 && key.charAt(i) <= 90) || (key.charAt(i) >= 97 && key.charAt(i) <= 122))
 				trimmed += key.charAt(i);
 		}
 
@@ -187,10 +191,6 @@ public class FourSquareCipher {
 			bigram[i] = catchSubstring(newKey,  count, count+2);
 			count += 2;
 		}
-
-/* 		for (int i = 0; i < bigram.length; i++) {
-			System.out.println(bigram[i]);
-		} */
 	}
 
 	/**
@@ -206,19 +206,15 @@ public class FourSquareCipher {
 			second = bigram[i].charAt(1);
 			for(int m = 0; m < 5; m++) {
 				for(int n = 0; n < 5; n++) {
-					//if both chars are equal, the second will be at none of the if statements
 					if(squareAlphabet[m][n] == first && squareAlphabet[m][n] == second) {
-						System.out.println("Passou no primeiro hehehe");
 						lineTopLeft = m;
 						colTopLeft = n;
 						lineBotRight = m;
 						colBotRight = n;
 					} else if(squareAlphabet[m][n] == first) {
-						System.out.println("Passou no segundo hehehe");
 						lineTopLeft = m;
 						colTopLeft = n;
 					} else if(squareAlphabet[m][n] == second) {
-						System.out.println("Passou no terceiro hehehe");
 						lineBotRight = m;
 						colBotRight = n;
 					}
@@ -239,11 +235,9 @@ public class FourSquareCipher {
 		for(int i = 0; i < encryptedMsg.length; i++) {
 			first = encryptedMsg[i].charAt(0);
 			second = encryptedMsg[i].charAt(1);
-			System.out.println(first + " " + second);
 			for(int m = 0; m < 5; m++) {
 				for(int n = 0; n < 5; n++) {
 					if(squareKeyword1[m][n] == first && squareKeyword2[m][n] == second) {
-						//System.out.println("1 - " + m + "" + n);
 						lineTopRight = m;
 						colTopRight = n;
 						lineBotLeft = m;
@@ -252,13 +246,19 @@ public class FourSquareCipher {
 						lineTopRight = m;
 						colTopRight = n;
 					} else if(squareKeyword2[m][n] == second) {
-						//System.out.println("2 - " + m + "" + n);
 						lineBotLeft = m;
 						colBotLeft = n;
 					}
 				}
 			}
 			decryptedMsg[i] = "" + squareAlphabet[lineTopRight][colBotLeft] + squareAlphabet[lineBotLeft][colTopRight];
+		}
+	}
+
+	public void arrayToString() {
+		for(int i = 0; i < encryptedMsg.length; i++) {
+			encryptedMsgString += encryptedMsg[i];
+			decryptedMsgString += decryptedMsg[i];
 		}
 	}
 
@@ -314,13 +314,5 @@ public class FourSquareCipher {
 		}
 
 		System.out.println("");
-	}
-
-	public static void main(String[] args) {
-		FourSquareCipher f = new FourSquareCipher();
-		f.convertToBigram("Hello World");
-		f.Encrypt();
-		f.Decrypt();
-		f.print();
 	}
 }
