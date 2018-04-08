@@ -1,3 +1,4 @@
+package ie.gmit.sw;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -28,6 +29,8 @@ class FourSquareCipher {
 	public String encryptedMsgString;
 	public String[] decryptedMsg;
 	public String decryptedMsgString;
+	public String ciphertext;
+	public String plaintext;
 	private int sizeBigram;
 
 	/**
@@ -161,7 +164,29 @@ class FourSquareCipher {
 	/**
 	 * 
 	 */
+	public boolean isLetter(char c) {
+		boolean verify = false;
+		if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122)) verify = true;
+		
+		return verify;
+	}
+
+	/**
+	 * 
+	 */
+	public boolean isUpperCase(char c) {
+		boolean verify = false;
+		if (c >= 65 && c <= 90) verify = true;
+		
+		return verify;
+	}
+
+	/**
+	 * 
+	 */
 	public void convertToBigram(String key) {
+		ciphertext = key;
+
 		//trim the String first
 		trimmed = trimString(key);
 
@@ -253,13 +278,59 @@ class FourSquareCipher {
 			}
 			decryptedMsg[i] = "" + squareAlphabet[lineTopRight][colBotLeft] + squareAlphabet[lineBotLeft][colTopRight];
 		}
+
+		arrayToString();
 	}
 
+	/**
+	 * 
+	 */
 	public void arrayToString() {
 		for(int i = 0; i < encryptedMsg.length; i++) {
 			encryptedMsgString += encryptedMsg[i];
 			decryptedMsgString += decryptedMsg[i];
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void ciphertextAndPlaintextMaker() {
+		int count = 0;
+		final int asciiCode = 32;
+
+		for(int i = 0; i < ciphertext.length(); i++) {
+			if((isLetter(ciphertext.charAt(i)) && isUpperCase(ciphertext.charAt(i))) && 
+			  	(!isUpperCase(encryptedMsgString.charAt(count)))) {
+				
+				char c = (char)(encryptedMsgString.charAt(count) - asciiCode);
+				ciphertext = ciphertext.replace(ciphertext.charAt(i), c);
+				count++;
+			
+			} else if ((isLetter(ciphertext.charAt(i)) && !isUpperCase(ciphertext.charAt(i))) && 
+				(isUpperCase(encryptedMsgString.charAt(count)))) {
+				
+				char c = (char)(encryptedMsgString.charAt(count) + asciiCode);
+				ciphertext = ciphertext.replace(ciphertext.charAt(i), c);
+				count++;
+			
+			} else if ((isLetter(ciphertext.charAt(i)) && isUpperCase(ciphertext.charAt(i))) && 
+			    (isUpperCase(encryptedMsgString.charAt(count)))) {
+
+				char c = (char)(encryptedMsgString.charAt(count));
+				ciphertext = ciphertext.replace(ciphertext.charAt(i), c);;
+				count++;
+
+			} else if ((isLetter(ciphertext.charAt(i)) && !isUpperCase(ciphertext.charAt(i))) && 
+			    (!isUpperCase(encryptedMsgString.charAt(count)))) {
+				
+				char c = (char)(encryptedMsgString.charAt(count));
+				ciphertext = ciphertext.replace(ciphertext.charAt(i), c);
+				count++;
+			}
+		}
+
+		System.out.println(ciphertext);
 	}
 
 	public void print() {

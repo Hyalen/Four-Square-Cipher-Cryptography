@@ -1,11 +1,15 @@
+package ie.gmit.sw;
 import java.util.Scanner;
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.*;
+import java.nio.charset.*;
 
+/**
+ * criar um metodo de converter o encryptedMsg em um plain text com a mensagem cifrada
+ */
 public class Runner {
+
+    private static Charset ASCII = Charset.forName("ASCII");
+
     public static void menu() {
         FourSquareCipher f = new FourSquareCipher();
         Scanner s = new Scanner(System.in);
@@ -71,11 +75,10 @@ public class Runner {
                         f.convertToBigram(keyword);
                         f.Encrypt();
                         f.Decrypt();
-                        f.arrayToString();
-                        
+                        f.ciphertextAndPlaintextMaker();                        
                         try {
                             BufferedWriter wr = new BufferedWriter(new FileWriter("ciphertextOutput.txt"));
-                            wr.write(f.encryptedMsgString);
+                            wr.write(f.ciphertext);
                             wr.close();
                         } catch(IOException e) {
                             e.printStackTrace();
@@ -114,7 +117,6 @@ public class Runner {
         } else if(num1 == 2) {
             try {
                 br = new BufferedReader(new FileReader(file));
-                
                 while((line = br.readLine()) != null) {
                     fileText += line;
                 }
@@ -142,10 +144,10 @@ public class Runner {
                         f.convertToBigram(fileText);
                         f.Encrypt();
                         f.Decrypt();
-                        f.arrayToString();
+                        f.ciphertextAndPlaintextMaker();                        
                         try {
-                            BufferedWriter wr = new BufferedWriter(new FileWriter("ciphertextOutput.txt"));
-                            wr.write(f.encryptedMsgString);
+                            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream("ciphertextOutput.txt"), "UTF-8");
+                            wr.write(f.ciphertext);
                             wr.close();
                         } catch(IOException e) {
                             e.printStackTrace();
